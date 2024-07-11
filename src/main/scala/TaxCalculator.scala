@@ -50,11 +50,17 @@ class TaxCalculator {
     }
   }
 
-  def CapitalGainCalculate (CapGainProfit:Double, income:Double): Double={
-    if (income <= ThresholdCGT && CapGainProfit <=CapitalGainTaxAllowance) {
-   0
+  // A method to calculate capital gains tax
+  def CapitalGainCalculate(capGainProfit: Double, income: Double): Double = {
+    if (capGainProfit <= CapitalGainTaxAllowance) {
+      0
     } else {
-      (CapGainProfit-CapitalGainTaxAllowance)*HigherRateShare
+      val taxableGain = capGainProfit - CapitalGainTaxAllowance
+      if (income <= ThresholdCGT) {
+        taxableGain * basicRateShare
+      } else {
+        taxableGain * HigherRateShare
+      }
     }
   }
 
