@@ -11,6 +11,13 @@ class TaxCalculator {
   private val higherRate: Double = 0.4
   private val additionalRate: Double = 0.45
 
+  //CGT rates
+  private val CapitalGainTaxAllowance:Double = 3000
+  private val basicRateShare:Double = 0.1
+  private val HigherRateShare:Double = 0.2
+  //CGT Bands
+  private val ThresholdCGT:Double = 50270
+
   // A method to calculate the total amount of tax to be paid, returned as a double
   def calculateTax(income: Double): Double = {
     if ( income <= personalAllowance){
@@ -41,6 +48,21 @@ class TaxCalculator {
     } else {
       "No Limit"
     }
+  }
+
+  def CapitalGainCalculate (CapGainProfit:Double, income:Double): Double={
+    if (income <= ThresholdCGT && CapGainProfit <=CapitalGainTaxAllowance) {
+   0
+    } else {
+      (CapGainProfit-CapitalGainTaxAllowance)*HigherRateShare
+    }
+  }
+
+  //call existing calculateTax and CapitalGainCalculate and compute Total Tax
+  def TotalTax (income:Double, CapGainProfit:Double):Double = {
+   val  incomeTax = calculateTax(income)
+   val  CapitalGainTax = CapitalGainCalculate(CapGainProfit, income)
+    incomeTax+CapitalGainTax // Returning the total tax
   }
 
 }
