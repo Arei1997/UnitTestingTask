@@ -18,13 +18,24 @@ class TaxCalculatorSpec extends AnyWordSpec {
       assert(result == 4000)
     }
     "Income is equal to or below the higher rate limit" in {
-      val result: Double = taxCalculator.calculateTax((75000))
+      val result: Double = taxCalculator.calculateTax(75000)
       assert(result == 18000)
     }
-      //((50000-10000)*0.2)+((125000-50000)*0.4)+((150000-125000)*0.45)
-    "income is above the higher rate limit" in {
+    "Income is above the higher rate limit" in {
       val result: Double = taxCalculator.calculateTax(150000)
       assert(result == 49250)
+    }
+    "Income is exactly at the personal allowance" in {
+      val result: Double = taxCalculator.calculateTax(10000)
+      assert(result == 0)
+    }
+    "Income is exactly at the basic rate limit" in {
+      val result: Double = taxCalculator.calculateTax(50000)
+      assert(result == 8000)
+    }
+    "Income is exactly at the higher rate limit" in {
+      val result: Double = taxCalculator.calculateTax(125000)
+      assert(result == 38000)
     }
   }
 
@@ -56,14 +67,22 @@ class TaxCalculatorSpec extends AnyWordSpec {
   }
   //Total Tax Testing
 
-  "Total tax should calculate a sum of income tax and Capital gain tax" should{
-    "return total tax for a High rate taxpayer" in {
-      val result: Double = taxCalculator.TotalTax(30000, 2500)
-      assert(result == 4000)
+  "TaxCalculator.formattedCurrentTaxAllowance" should {
+    "return the formatted allowance for the personal tax limit" in {
+      val result: String = taxCalculator.formattedCurrentTaxAllowance(5000)
+      assert(result == "£10,000")
     }
-    "return total tax for basic rate taxpayer" in{
-      val result:Double = taxCalculator.TotalTax(450000,10000)
-      assert(result==5050)
+    "return the formatted allowance for the basic rate limit" in {
+      val result: String = taxCalculator.formattedCurrentTaxAllowance(30000)
+      assert(result == "£50,000")
+    }
+    "return the formatted allowance for the higher rate limit" in {
+      val result: String = taxCalculator.formattedCurrentTaxAllowance(80000)
+      assert(result == "£125,000")
+    }
+    "return 'No limit' for incomes above the higher rate limit" in {
+      val result: String = taxCalculator.formattedCurrentTaxAllowance(150000)
+      assert(result == "No Limit")
     }
   }
 
